@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You Got This</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <script src='https://js.tito.io/v1' async></script>
+    <link rel="stylesheet" type="text/css" href='https://css.tito.io/v1.1' />
+    <style>
+      .tito-badge-link { display: none; }
+      .tito-discount-code { margin-left: 15px; }
+      .tito-submit {
+        background-color: rgb(219,39,119) !important;
+        border-color: rgb(175, 21, 89) !important;
+      }
+      .tito-submit:hover, .tito-submit:active, .tito-submit:focus {
+        background-color: rgb(175, 21, 89) !important;
+        border-color: rgb(175, 21, 89) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="relative bg-gray-100 dark:bg-gray-800 dark:border-b-2 dark:border-gray-700 flex justify-between items-center px-4 py-6 sm:px-6 md:justify-start md:space-x-10"
+    >
+      <div class="lg:w-0 lg:flex-1">
+        <a href="/" class="flex items-center">
+          <img class="h-8 w-auto sm:h-10" src="/fist.svg" alt="Fist with Code Tattoo" />
+          <h1 class="sm:text-l lg:text-2xl pl-4 font-bold text-gray-900 dark:text-white">You Got This</h1>
+        </a>
+      </div>
+      <div class="hidden md:flex items-center justify-end space-x-8 md:flex-1 lg:w-0">
+        <a
+          href="https://yougotthis.io/couch"
+          class="text-base leading-6 font-medium text-gray-500 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white focus:text-white focus:outline-none transition ease-in-out duration-150"
+          >You Got This From Your Couch</a
+        >
+      </div>
+    </div>
+
+    <div class="relative overflow-hidden dark:bg-pink-800" id="app">
+        <main class="mt-8 mx-auto max-w-screen-md px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20">
+          <h2 class="text-center text-2xl leading-2 font-extrabold text-gray-900 sm:text-5xl dark:text-white">
+            <span class="leading-tight">Thank you for applying for a You Got This From Your Couch <span class="text-pink-600 dark:text-white">Inclusion Programme Ticket</span></span>
+          </h2>
+          <div v-if="result" class="my-8 text-center">
+            <p v-if="result.accepted">We would love to offer you a place at the You Got This From Your Couch workshop day free of charge. We hope you get lots of value from attending. As always, if you want to share the event with friends please do - the conference day is free!</p>
+            <p v-else>Application not found. If you think this is an error please contact <a href="mailto:kevin@yougotthis.io">kevin@yougotthis.io</a></p>
+          </div>
+          <tito-widget event="yougotthisconf/couch" :discount-code="application" :class="{ hidden: !result || result && !result.accepted }"></tito-widget>
+        </main>
+      </div>
+    </div>
+    <script src="vue.js"></script>
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {
+          application: false,
+          result: false
+        },
+        async created() {
+          const params = new URLSearchParams(window.location.search);
+          this.application = params.get('application');
+          this.result = await fetch(`/api/application?id=${this.application}`).then(r => r.json())
+          console.log(this.result)
+        }
+      })
+    </script>
+  </body>
+</html>
